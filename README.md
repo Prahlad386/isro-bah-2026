@@ -542,12 +542,6 @@ pip install matplotlib
 pip install reportlab
 ```
 
-or:
-
-```bash
-pip install -r requirements.txt
-```
-
 ---
 
 # Running
