@@ -1,0 +1,12 @@
+{
+"type": "FeatureCollection",
+"name": "LandingCandidates",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:ESRI::104903" } },
+"features": [
+{ "type": "Feature", "properties": { "candidate_id": "LC-01", "suitability_score": 0.97038578987121582, "distance_to_ice_m": 261.62950903902259, "hazard_value": 0.090432241559028625 }, "geometry": { "type": "Point", "coordinates": [ -199165.0, -201685.0 ] } },
+{ "type": "Feature", "properties": { "candidate_id": "LC-02", "suitability_score": 0.95692294836044312, "distance_to_ice_m": 261.62950903902259, "hazard_value": 0.1072608083486557 }, "geometry": { "type": "Point", "coordinates": [ -199165.0, -201215.0 ] } },
+{ "type": "Feature", "properties": { "candidate_id": "LC-03", "suitability_score": 0.93678277730941772, "distance_to_ice_m": 250.19992006393608, "hazard_value": 0.14136537909507751 }, "geometry": { "type": "Point", "coordinates": [ -199300.0, -201460.0 ] } },
+{ "type": "Feature", "properties": { "candidate_id": "LC-04", "suitability_score": 0.92528253793716431, "distance_to_ice_m": 295.16944286290885, "hazard_value": 0.12060821801424026 }, "geometry": { "type": "Point", "coordinates": [ -198755.0, -201460.0 ] } },
+{ "type": "Feature", "properties": { "candidate_id": "LC-05", "suitability_score": 0.87182176113128662, "distance_to_ice_m": 279.86603938313061, "hazard_value": 0.1993899941444397 }, "geometry": { "type": "Point", "coordinates": [ -198960.0, -201185.0 ] } }
+]
+}

@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "BestLandingSite",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:ESRI::104903" } },
+"features": [
+{ "type": "Feature", "properties": { "candidate_id": "LC-01", "final_score": 0.88375478308988131, "safety_score": 0.99999998985431093, "access_score": 0.77012403250541173, "science_score": 0.76358789205551147, "distance_to_ice_m": 145.34441853748635 }, "geometry": { "type": "Point", "coordinates": [ -199165.0, -201685.0 ] } }
+]
+}
