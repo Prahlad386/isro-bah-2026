@@ -1,9 +1,7 @@
 """
-====================================================================
-PERSON 4 - ROVER TRAVERSE PLANNING & ICE VOLUME LEAD
+ROVER TRAVERSE PLANNING & ICE VOLUME LEAD
 Full pipeline: landing site selection -> cost map -> A* path planning
                -> distance/energy estimate -> ice volume estimate -> PDF reports
-====================================================================
 Reads from data/inputs/ (synthetic stand-ins for Person 2 & Person 3 outputs):
     HazardMap.tif, LandingSuitability.tif, IceProbability.tif, IceMask.tif,
     IceRegions.geojson, LandingCandidates.geojson
@@ -16,7 +14,6 @@ Writes to data/outputs/:
     MissionPlan.pdf
 
 Run:  python3 01_person4_pipeline.py
-====================================================================
 """
 
 import numpy as np
@@ -52,9 +49,7 @@ print("=" * 70)
 print("PERSON 4 PIPELINE START")
 print("=" * 70)
 
-# ====================================================================
-# STEP 0: Load all inputs
-# ====================================================================
+# Inputs
 print("\n[STEP 0] Loading inputs...")
 
 with rasterio.open(f"HazardMap.tif") as src:
@@ -85,10 +80,8 @@ def world_to_pixel(x, y):
 def pixel_to_world(row, col):
     x, y = xy(transform, row, col)
     return x, y
-
-# ====================================================================
-# STEP 1: Ice target identification ("crater detected" / ice zone confirmed)
-# ====================================================================
+  
+# Ice target
 print("\n[STEP 1] Identifying ice target zone...")
 
 # Pick the highest mean-probability ice region as the primary target
@@ -103,11 +96,7 @@ print(f"  Target ice region: id={target_region['region_id']}, "
 print(f"  Target centroid (world): ({target_centroid.x:.1f}, {target_centroid.y:.1f})")
 print(f"  Target pixel (row,col): ({target_row}, {target_col})")
 
-# ====================================================================
-# STEP 2: Landing site selection
-# Score each candidate on Safety (suitability), Accessibility (1/distance),
-# and Science value (ice probability/area of nearest region)
-# ====================================================================
+# Landing site selection
 print("\n[STEP 2] Scoring and selecting landing site...")
 
 W_SAFETY, W_ACCESS, W_SCIENCE = 0.5, 0.3, 0.2
@@ -155,12 +144,8 @@ best_site_gdf = gpd.GeoDataFrame(
 best_site_gdf.to_file(f"BestLandingSite.geojson", driver="GeoJSON")
 print(f"  Saved -> BestLandingSite.geojson")
 
-# ====================================================================
-# STEP 3: Mission cost map
-# Combine hazard + shadow penalty (shadow already embedded in HazardMap
-# via Person 3's pipeline, so we re-derive a power-penalty proxy here
-# from hazard's shadow-dominant component for transparency)
-# ====================================================================
+# Mission cost map
+
 print("\n[STEP 3] Building mission cost map...")
 
 W_HAZARD, W_SHADOW = 0.7, 0.3
@@ -178,9 +163,7 @@ with rasterio.open(f"MissionCostMap.tif", "w", **cost_profile) as dst:
     dst.write(cost, 1)
 print(f"  Saved -> MissionCostMap.tif  range=({cost.min():.3f},{cost.max():.3f})")
 
-# ====================================================================
-# STEP 4: A* path planning from landing site to ice target
-# ====================================================================
+# A* path planning
 print("\n[STEP 4] Running A* path planning...")
 
 def astar(cost_grid, start, goal):
@@ -247,9 +230,6 @@ path_gdf = gpd.GeoDataFrame(
 path_gdf.to_file(f"TraversePath.geojson", driver="GeoJSON")
 print(f"  Saved -> TraversePath.geojson")
 
-# ====================================================================
-# STEP 5: Distance, time, shadow-exposure, energy estimate
-# ====================================================================
 print("\n[STEP 5] Computing distance, time, and energy estimates...")
 
 seg_dists_m = []
@@ -278,9 +258,7 @@ print(f"  Estimated travel time:   {travel_time_hr:.2f} hours")
 print(f"  Avg shadow/hazard exposure along path: {avg_shadow_exposure:.3f} (0=sunlit/safe, 1=deep shadow/hazard)")
 print(f"  Estimated energy consumption: {total_energy_Wh:.1f} Wh")
 
-# ====================================================================
-# STEP 6: Ice volume estimation (top 5 m of regolith, dielectric mixing model)
-# ====================================================================
+# Ice volume estimation
 print("\n[STEP 6] Estimating subsurface ice volume...")
 
 # Ice volume fraction per pixel: scale IceProbability into a plausible 5-20% range
@@ -305,9 +283,7 @@ print(f"  Estimated depth considered: top {ICE_DEPTH_M:.0f} m")
 print(f"  TOTAL ESTIMATED ICE VOLUME: {total_ice_volume_m3:,.0f} m^3")
 print(f"  TOTAL ESTIMATED ICE MASS:   {total_ice_mass_tonnes:,.0f} tonnes")
 
-# ====================================================================
-# STEP 7: Generate map figure (used in both PDFs)
-# ====================================================================
+# Generate map figure
 print("\n[STEP 7] Generating mission map figure...")
 
 extent = [transform.c, transform.c + transform.a * cost.shape[1],
@@ -355,9 +331,7 @@ plt.savefig(ice_fig_path, dpi=130)
 plt.close()
 print(f"  Saved -> {ice_fig_path}")
 
-# ====================================================================
-# STEP 8: Generate MissionPlan.pdf
-# ====================================================================
+# Generate MissionPlan.pdf
 print("\n[STEP 8] Generating MissionPlan.pdf...")
 
 styles = getSampleStyleSheet()
@@ -439,9 +413,7 @@ elements.append(Paragraph(
 doc.build(elements)
 print(f"  Saved -> MissionPlan.pdf")
 
-# ====================================================================
-# STEP 9: Generate IceVolumeReport.pdf
-# ====================================================================
+# Generate IceVolumeReport.pdf
 print("\n[STEP 9] Generating IceVolumeReport.pdf...")
 
 doc2 = SimpleDocTemplate(f"IceVolumeReport.pdf", pagesize=A4,
@@ -504,9 +476,6 @@ elements2.append(Paragraph(
 doc2.build(elements2)
 print(f"  Saved -> IceVolumeReport.pdf")
 
-# ====================================================================
-# DONE
-# ====================================================================
 print("\n" + "=" * 70)
 print("PERSON 4 PIPELINE COMPLETE")
 print("=" * 70)
