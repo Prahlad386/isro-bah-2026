@@ -66,24 +66,19 @@ isro-bah-2026/
 ├── hazardmap.obj
 │       3D lunar terrain mesh input
 │
-├── data/
-│
-│   ├── inputs/
-│   │
-│   │   ├── HazardMap.tif
-│   │   ├── LandingSuitability.tif
-│   │   ├── IceProbability.tif
-│   │   ├── IceMask.tif
-│   │   ├── IceRegions.geojson
-│   │   └── LandingCandidates.geojson
-│   │
-│   └── outputs/
-│       │
-│       ├── BestLandingSite.geojson
-│       ├── MissionCostMap.tif
-│       ├── TraversePath.geojson
-│       ├── MissionPlan.pdf
-│       └── IceVolumeReport.pdf
+│       Inputs
+│── HazardMap.tif
+│── LandingSuitability.tif
+│── IceProbability.tif
+│── IceMask.tif
+│── IceRegions.geojson
+│── LandingCandidates.geojson
+│       Outputs
+│── BestLandingSite.geojson
+│── MissionCostMap.tif
+│── TraversePath.geojson
+│── MissionPlan.pdf
+│── IceVolumeReport.pdf
 │
 └── README.md
 ```
